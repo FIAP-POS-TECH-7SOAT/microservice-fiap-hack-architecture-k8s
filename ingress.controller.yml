@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hack-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    kubernetes.io/ingress.class: "nginx" 
+spec:
+  rules:
+    - host: a6fff668088084dbe84730fcaa641965-2133903427.us-east-1.elb.amazonaws.com
+      http:
+        paths:
+          - path: /service-notification(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: hack-notification-service
+                port:
+                  number: 80
+          - path: /service-videos(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name:  hack-send-videos-service
+                port:
+                  number: 80
+          
+        

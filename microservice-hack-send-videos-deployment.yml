@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hack-send-videos-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hack-send-videos
+  template:
+    metadata:
+      name: hack-send-videos-pod
+      labels: 
+        app: hack-send-videos-pod
+    spec:
+      containers:
+        - name: hack-send-videos-container
+          image: tsrocha901/microservice-fiap-hack-send-videos:lastest
+          ports:
+            - containerPort: 3333
+          envFrom:
+            - configMapRef:
+                name: config-map-deployment-hack-send-videos
+          livenessProbe: # Prova de vida que valida se o pod esta saudavel para receber requisição 
+            httpGet: # Será feita uma requisição do verbo GET
+              path: /info
+              port: 3333 # Porta do container
+            periodSeconds: 10 # Tentativas a cada X segundos
+            failureThreshold: 3 # Quantas vezes são necessarias falhar a requisição antes de deletar o pod e criar um novo
+            initialDelaySeconds: 20 # Quanto tempo o conteiner deve esperar antes do LivenessProb iniciar os testes
+          readinessProbe:  # Testa para saber se o container está pronto para receber requisição
+            httpGet:
+              path: /info
+              port: 3333
+            periodSeconds: 10
+            failureThreshold: 5 # Com exemplo de 5, se na vez numero 5 ainda estiver acontencendo alguma falha ele ira liberar para o liveness iniciar os testes e dara ao conteiner o status de Pronto
+            initialDelaySeconds: 15
+          resources:
+            requests:
+              cpu: 10m
+  selector:
+    matchLabels:
+      app: hack-send-videos-pod
