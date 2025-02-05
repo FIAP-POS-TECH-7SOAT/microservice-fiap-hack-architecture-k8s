@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: hack-notification-container
-          image: tsrocha901/microservice-fiap-hack-notification:lastest
+          image: tsrocha901/microservice-fiap-hack-notification:latest
           ports:
             - containerPort: 3333
           envFrom:

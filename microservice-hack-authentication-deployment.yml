@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hack-authentication-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hack-authentication
+  template:
+    metadata:
+      name: hack-authentication-pod
+      labels:
+        app: hack-authentication-pod
+    spec:
+      containers:
+        - name: hack-authentication-container
+          image: tsrocha901/microservice-fiap-hack-authentication:latest
+          ports:
+            - containerPort: 3333
+          envFrom:
+            - configMapRef:
+                name: config-map-deployment-hack-authentication  
+          # livenessProbe: # Prova de vida que valida se o pod está saudável
+          #   httpGet:
+          #     path: /info
+          #     port: 3333
+          #   periodSeconds: 10
+          #   failureThreshold: 3
+          #   initialDelaySeconds: 20
+          # readinessProbe: # Testa se o container está pronto para receber requisições
+          #   httpGet:
+          #     path: /info
+          #     port: 3333
+          #   periodSeconds: 10
+          #   failureThreshold: 5
+          #   initialDelaySeconds: 15
+          resources:
+            requests:
+              cpu: 10m
+  selector:
+    matchLabels:
+      app: hack-authentication-pod

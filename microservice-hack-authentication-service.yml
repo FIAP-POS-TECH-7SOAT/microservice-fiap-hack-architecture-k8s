@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hack-notification-service
+  name: hack-authentication-service
 spec:
   selector:
-    app: hack-notification-pod
+    app: hack-authentication-pod
   ports:
   - protocol: TCP
     port: 80

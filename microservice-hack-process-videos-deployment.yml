@@ -1,36 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hack-send-videos-deployment
+  name: hack-process-videos-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hack-send-videos
+      app: hack-process-videos
   template:
     metadata:
-      name: hack-send-videos-pod
+      name: hack-process-videos-pod
       labels:
-        app: hack-send-videos-pod
+        app: hack-process-videos-pod
     spec:
       containers:
-        - name: hack-send-videos-container
-          image: tsrocha901/microservice-fiap-hack-send-videos:latest
+        - name: hack-process-videos-container
+          image: rafaelyuji/microservice-fiap-processa-video:latest
           ports:
             - containerPort: 3333
           envFrom:
             - configMapRef:
-                name: config-map-deployment-hack-send-videos  
+                name: config-map-deployment-hack-process-videos  
           livenessProbe: # Prova de vida que valida se o pod está saudável
             httpGet:
-              path: /info
+              path: /health
               port: 3333
             periodSeconds: 10
             failureThreshold: 3
             initialDelaySeconds: 20
           readinessProbe: # Testa se o container está pronto para receber requisições
             httpGet:
-              path: /info
+              path: /health
               port: 3333
             periodSeconds: 10
             failureThreshold: 5
@@ -40,4 +40,4 @@ spec:
               cpu: 10m
   selector:
     matchLabels:
-      app: hack-send-videos-pod
+      app: hack-process-videos-pod
